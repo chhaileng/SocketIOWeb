@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<script src="/js/jquery.min.js"></script>
+<script src="/js/socket.io.js"></script>
+<title>Real Time Bidding</title>
+</head>
+<body>
+	<p>Connection Status: <span style="color: red" id="status">Not Connected</span></p>
+	<p>Current Price: $ <span id="price">0.0</span></p>
+	<input id="txtPrice" type="number" placeholder="Bid Price" />
+	<input id="btnClick" type="button" value="Place Bid"/>
+	<script>
+		function output(price) {
+			$("#price").text(price);
+		}
+
+		var socket = io.connect("http://127.0.0.1:9000");
+		socket.on("connect", function() {
+			$("#status").text("Connected")
+		});
+
+		$("#btnClick").click(function() {
+			// var price = $("#txtPrice").eq(0).val();
+			var price = $("#txtPrice").val();
+			console.log(price);
+			socket.emit("test", {
+				"price" : price
+			});
+			output(price);
+		});
+
+		socket.on("test", function(data) {
+			output(data.price);
+		});
+	</script>
+</body>
+</html>

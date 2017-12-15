@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<script src="/js/jquery.min.js"></script>
+<script src="/js/socket.io.js"></script>
+<title>Home</title>
+</head>
+<body>
+	<p>Connection Status: <span style="color: red" id="status">Not Connected</span></p>
+	<p>Price: $ <span id="price" th:text="${price.price}">0.0</span></p>
+	<form method="POST" action="/bid">
+		<input id="priceTextField" name="price" th:value="${price.price} + 1" type="number" placeholder="Price" />
+		<input type="submit" value="Bid"/>
+	</form>
+	<script>
+		function updateResult(price) {
+			$("#price").text(price.toFixed(1));
+			$("#priceTextField").val(price + 1)
+		}
+
+		var socket = io.connect("http://127.0.0.1:9090/auction");
+		socket.on("connect", function() {
+			$("#status").text("Connected")
+		});
+		
+		socket.on("disconnect", function() {
+			$("#status").text("Not Connected")
+		});
+
+
+		socket.on("onBid", function(data) {
+			updateResult(data.price);
+		});
+	</script>
+</body>
+</html>
