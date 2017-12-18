@@ -1,7 +1,7 @@
 package info.chhaileng.app.model;
 
 public class Price {
-	double price;
+	private double price;
 
 	public double getPrice() {
 		return price;
@@ -16,4 +16,10 @@ public class Price {
 	public Price() {
 		this.price = 0;
 	}
+
+	@Override
+	public String toString() {
+		return "Price [price=" + price + "]";
+	}
+	
 }
